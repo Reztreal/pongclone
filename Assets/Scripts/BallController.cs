@@ -5,8 +5,8 @@ using System;
 
 public class BallController : MonoBehaviour
 {
-    [SerializeField]
-    float speed = 10;
+    
+    public float speed = 5;
     [SerializeField]
     private float bounceAngle;
     private float screenHeight;
