@@ -41,6 +41,8 @@ public class BallController : MonoBehaviour
         {
             OnScore(transform.position.x);
         }
+
+
     }
 
     void OnTriggerEnter2D(Collider2D collider)

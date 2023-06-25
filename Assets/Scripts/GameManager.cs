@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     BallController Ball;
     public TextMeshProUGUI playerScoreText;
     public TextMeshProUGUI aiScoreText;
+    public TextMeshProUGUI gameOverText;
 
 
     // Start is called before the first frame update
@@ -23,7 +24,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        CheckScore();
     }
 
     void Score(float position)
@@ -32,17 +33,32 @@ public class GameManager : MonoBehaviour
         {
             Ball.transform.position = Vector2.zero;
             Ball.speed = 5;
-            playerScore++;
-            playerScoreText.text = playerScore.ToString();
+            aiScore++;
+            aiScoreText.text = aiScore.ToString();
         }
         else if (position > 8)
         {
             Ball.transform.position = Vector2.zero;
             Ball.speed = 5;
-            aiScore++;
-            aiScoreText.text = aiScore.ToString();
+            playerScore++;
+            playerScoreText.text = playerScore.ToString();
+
+        }
+    }
+
+    void CheckScore()
+    {
+        if (playerScore == 3)
+        {
+            gameOverText.text = "You Won!";
+            gameOverText.gameObject.SetActive(true);
         }
 
+        else if (aiScore == 3)
+        {
+            gameOverText.text = "You Lost!";
+            gameOverText.gameObject.SetActive(true);
+        }
     }
 
 }
