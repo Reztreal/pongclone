@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class BallController : MonoBehaviour
 {
@@ -13,10 +14,11 @@ public class BallController : MonoBehaviour
     private float ballHeight;
     private float topBound;
     private float screenWidth;
+    public bool startGame = false;
+    private Vector2 direction = Vector2.left;
 
     private PaddleController paddleControllerScript;
-
-    public event Action<float> OnScore;
+    public TextMeshProUGUI timerText;
 
     // Start is called before the first frame update
     void Start()
@@ -29,20 +31,16 @@ public class BallController : MonoBehaviour
         ballHeight = transform.localScale.y / 2;
         topBound = screenHeight - ballHeight;
 
-        Debug.Log(screenWidth);
+        StartCoroutine(Countdown(3));
     }
 
     // Update is called once per frame
     void Update()
     {
-        Move();
-
-        if (transform.position.x < -screenWidth || transform.position.x > screenWidth)
+        if (startGame)
         {
-            OnScore(transform.position.x);
+            Move();
         }
-
-
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -73,9 +71,20 @@ public class BallController : MonoBehaviour
 
     void Move()
     {
-        transform.Translate(Vector3.left * speed * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime);
         transform.Translate(Vector2.up * speed * bounceAngle * Time.deltaTime);
 
+        if (transform.position.x < -screenWidth)
+        {
+            bounceAngle = UnityEngine.Random.Range(-.5f, .5f);
+            direction = Vector2.left;
+        }
+
+        if (transform.position.x > screenWidth)
+        {
+            bounceAngle = UnityEngine.Random.Range(-.5f, .5f);
+            direction = Vector2.right;
+        }
 
         if (transform.position.y > topBound)
         {
@@ -88,5 +97,17 @@ public class BallController : MonoBehaviour
             transform.position = new Vector2(transform.position.x, -topBound);
             bounceAngle *= -1;
         }
+    }
+
+    
+    IEnumerator Countdown (int seconds) {
+        int counter = seconds;
+        while (counter > 0) {
+            timerText.text = counter.ToString();
+            yield return new WaitForSeconds (1);
+            counter--;
+        }
+        timerText.gameObject.SetActive(false);
+        startGame = true;
     }
 }

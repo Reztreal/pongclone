@@ -9,10 +9,12 @@ public class PaddleController : MonoBehaviour
     private float playerHeight;
     private float topBound;
     public int moveDir;
+    BallController Ball;
 
     // Start is called before the first frame update
     void Start()
     {
+        Ball = FindObjectOfType<BallController>();
         screenHeight = Camera.main.orthographicSize;
         playerHeight = transform.localScale.y / 2;
         topBound = screenHeight - playerHeight;
@@ -20,6 +22,14 @@ public class PaddleController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (Ball.startGame)
+        {
+            MovePaddle();
+        }
+    }
+
+    void MovePaddle()
     {
         float inputY = Input.GetAxisRaw("Vertical");
         float velocity  = inputY * speed;
