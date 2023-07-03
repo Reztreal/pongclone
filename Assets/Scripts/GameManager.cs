@@ -17,12 +17,16 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gameOverText;
     public GameObject restartButton;
     public GameObject quitButton;
+    private AudioSource source;
+    public AudioClip scoreSound;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Ball = FindObjectOfType<BallController>();
+        source = GetComponent<AudioSource>();
+
         screenHeight = Camera.main.orthographicSize;
         screenWidth = Camera.main.aspect * screenHeight;
     }
@@ -38,6 +42,8 @@ public class GameManager : MonoBehaviour
     {
         if (Ball.transform.position.x < -(screenWidth))
         {
+            source.clip = scoreSound;
+            source.Play();
             Ball.transform.position = Vector2.zero;
             Ball.speed = 5;
             aiScore++;
@@ -45,6 +51,8 @@ public class GameManager : MonoBehaviour
         }
         else if (Ball.transform.position.x > screenWidth)
         {
+            source.clip = scoreSound;
+            source.Play();
             Ball.transform.position = Vector2.zero;
             Ball.speed = 5;
             playerScore++;

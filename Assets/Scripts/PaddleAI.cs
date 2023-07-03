@@ -13,6 +13,7 @@ public class PaddleAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         screenHeight = Camera.main.orthographicSize;
         playerHeight = transform.localScale.y / 2;
         topBound = screenHeight - playerHeight;

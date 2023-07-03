@@ -19,11 +19,14 @@ public class BallController : MonoBehaviour
 
     private PaddleController paddleControllerScript;
     public TextMeshProUGUI timerText;
+    private AudioSource source;
+    public AudioClip collisionSound, countdownShort, countdownLong;
 
     // Start is called before the first frame update
     void Start()
     {
         paddleControllerScript = GameObject.Find("Paddle 1").GetComponent<PaddleController>();
+        source = GetComponent<AudioSource>();
 
         bounceAngle = UnityEngine.Random.Range(-.5f, .5f);
         screenHeight = Camera.main.orthographicSize;
@@ -47,6 +50,8 @@ public class BallController : MonoBehaviour
     {
         if (collider.tag == "Paddle")
         {
+            source.clip = collisionSound;
+            source.Play();
             speed *= -1;
             speed += Mathf.Sign(speed);
             
@@ -73,6 +78,7 @@ public class BallController : MonoBehaviour
     {
         transform.Translate(direction * speed * Time.deltaTime);
         transform.Translate(Vector2.up * speed * bounceAngle * Time.deltaTime);
+        source.clip = collisionSound;
 
         if (transform.position.x < -screenWidth)
         {
@@ -88,12 +94,15 @@ public class BallController : MonoBehaviour
 
         if (transform.position.y > topBound)
         {
+            source.Play();
             transform.position = new Vector2(transform.position.x, topBound);
             bounceAngle *= -1;
+
         }
 
         else if (transform.position.y < -topBound)
         {
+            source.Play();
             transform.position = new Vector2(transform.position.x, -topBound);
             bounceAngle *= -1;
         }
@@ -102,11 +111,16 @@ public class BallController : MonoBehaviour
     
     IEnumerator Countdown (int seconds) {
         int counter = seconds;
+        source.clip = countdownShort;
         while (counter > 0) {
+            source.Play();
             timerText.text = counter.ToString();
             yield return new WaitForSeconds (1);
             counter--;
         }
+        source.clip = countdownLong;
+        source.Play();
+        yield return new WaitForSeconds (.4f);
         timerText.gameObject.SetActive(false);
         startGame = true;
     }
